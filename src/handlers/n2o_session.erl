@@ -4,8 +4,13 @@
 -include_lib("stdlib/include/ms_transform.hrl").
 -compile(export_all).
 
+get_stacktrace() ->
+	{_,Stacktrace} = erlang:process_info(self(), current_stacktrace),
+	Stacktrace.
+
 finish(State,Ctx) -> {ok,State,Ctx}.
-init(State,Ctx) -> case wf:config(n2o,auto_session) of
+init(State,Ctx) -> %erlang:display(get_stacktrace()),
+					case wf:config(n2o,auto_session) of
                         disabled -> {ok,State,Ctx};
                         _ -> n2o_session:ensure_sid(State,Ctx,[]) end.
 
@@ -70,7 +75,7 @@ cookie_expire(SecondsToLive) ->
     DateTime = calendar:gregorian_seconds_to_datetime(Seconds + SecondsToLive),
     cow_date:rfc2109(DateTime).
 
-ttl() -> wf:config(n2o,ttl,60*15).
+ttl() -> wf:config(n2o,ttl,60*60*24*90).
 
 till(Now,TTL) ->
     calendar:gregorian_seconds_to_datetime(

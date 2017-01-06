@@ -3,8 +3,11 @@
 function querySourceRaw(Id) {
     var val, el = document.getElementById(Id);
     if (!el) return "";
+	//console.log(Id);
+	//console.log(el.tagName);
     switch (el.tagName) {
         case 'FIELDSET': val = document.querySelector('#' + Id + ' :checked');
+						 console.log(val);
                          val = val ? val.value : ""; break;
         case 'INPUT':
             switch (el.getAttribute("type")) {
